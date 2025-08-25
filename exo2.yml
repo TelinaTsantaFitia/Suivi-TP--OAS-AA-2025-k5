@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: API Gestion Utilisateurs
+  version: 1.0.0
+  description: API pour lister les utilisateurs avec pagination
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /users:
+    get:
+      summary: Liste les utilisateurs
+      description: |
+        Retourne une liste d'utilisateurs avec pagination. 
+        Les paramètres `page` et `size` doivent être des entiers.
+      parameters:
+        - name: page
+          in: query
+          description: Numéro de la page (commence à 1)
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: Nombre d'utilisateurs par page
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Liste des utilisateurs retrouvés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Mauvais types de paramètres
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad types for provided query parameters
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Alice
+        email:
+          type: string
+          example: alice@example.com
