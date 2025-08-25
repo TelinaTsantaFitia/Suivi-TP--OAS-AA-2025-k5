@@ -1,0 +1,30 @@
+openapi: 3.0.0
+info:
+  title: Ping
+  version: 1.0.0
+  description: route ping.
+
+servers:
+  - url: http://localhost:3000
+    description: Serveur local
+
+paths:
+  /ping:
+    get:
+      summary: Vérifie que le service est actif
+      description: Retourne la chaîne "pong" en texte brut si le service répond.
+      responses:
+        '200':
+          description: Succès - service actif
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+        '500':
+          description: Erreur serveur interne
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Erreur serveur
