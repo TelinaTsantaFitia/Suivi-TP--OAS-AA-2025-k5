@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: User Profile API
+  version: 1.0.0
+  description: API de gestion des profils utilisateurs
+
+paths:
+  /users/{id}:
+    get:
+      summary: Récupérer un utilisateur
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Profil utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+
+  /users:
+    post:
+      summary: Créer des utilisateurs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUserProfile'
+      responses:
+        '201':
+          description: Utilisateurs créés avec identifiants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProfile'
+
+  /users/{id}/personalInfo:
+    put:
+      summary: Mise à jour des infos personnelles
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalInfo'
+      responses:
+        '200':
+          description: Infos personnelles mises à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInfo'
+
+  /users/{id}/address:
+    put:
+      summary: Mise à jour de l'adresse
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: Adresse mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+
+  /users/{id}/preferences:
+    put:
+      summary: Mise à jour des préférences
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preferences'
+      responses:
+        '200':
+          description: Préférences mises à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preferences'
+
+components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Identifiant unique de l'utilisateur
+
+  schemas:
+    UserProfile:
+      type: object
+      required:
+        - identifier
+        - first_name
+        - last_name
+        - birthdate
+        - email
+        - address_street
+        - address_city
+        - address_country
+        - address_postal_code
+        - needs_newsletter
+        - language
+      properties:
+        identifier:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+        address_street:
+          type: string
+        address_city:
+          type: string
+        address_country:
+          type: string
+        address_postal_code:
+          type: string
+          pattern: '^\d+$'
+        needs_newsletter:
+          type: boolean
+        language:
+          type: string
+          enum: [mg, fr, eng]
+
+    CreateUserProfile:
+      allOf:
+        - $ref: '#/components/schemas/PersonalInfo'
+        - $ref: '#/components/schemas/Address'
+        - $ref: '#/components/schemas/Preferences'
+
+    PersonalInfo:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - birthdate
+        - email
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+
+    Address:
+      type: object
+      required:
+        - address_street
+        - address_city
+        - address_country
+        - address_postal_code
+      properties:
+        address_street:
+          type: string
+        address_city:
+          type: string
+        address_country:
+          type: string
+        address_postal_code:
+          type: string
+          pattern: '^\d+$'
+
+    Preferences:
+      type: object
+      required:
+        - needs_newsletter
+        - language
+      properties:
+        needs_newsletter:
+          type: boolean
+        language:
+          type: string
+          enum: [mg, fr, eng]
